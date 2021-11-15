@@ -10,6 +10,7 @@ services:
     ports:
       - 3306:3306
     hostname: db
+    stdin_open: true
 
   back:
     build:
@@ -18,3 +19,14 @@ services:
       - ./back:/back
     ports:
       - 8080:8080
+    stdin_open: true
+
+  front:
+    build:
+      context: ./front
+    volumes:
+      - ./front:/usr/src/app
+    command: sh -c "yarn dev"
+    ports:
+      - 3000:3000
+    stdin_open: true
