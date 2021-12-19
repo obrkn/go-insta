@@ -10,10 +10,12 @@ const Home: NextPage = () => {
   const getData = useCallback(
     () => {
       axios
-        .get("back:8080", { 
-          withCredentials: true
-        })
-        .then(res => setData(res.data))
+        .get("http://localhost:8080")
+        .then(res => setData(res.data.title))
+        // .get("back:8080", { 
+        //   headers: {'withCredentials': 'true'}
+        // })
+        // .then(res => setData(res.data))
     },
     [],
   )
