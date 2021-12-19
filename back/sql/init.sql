@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS go_insta character SET utf8mb4 collate utf8mb4_bin;
+
+USE go_insta;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+DROP TABLE IF EXISTS photos;
+CREATE TABLE IF NOT EXISTS photos (
+  id INT UNSIGNED NOT NULL PRIMARY KEY auto_increment,
+  content VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) character SET utf8mb4 collate utf8mb4_bin;
