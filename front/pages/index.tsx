@@ -11,7 +11,7 @@ const Home: NextPage = () => {
     () => {
       axios
         .get("back:8080", { 
-          withCredentials: true
+          headers: {'withCredentials': 'true'}
         })
         .then(res => setData(res.data))
     },
