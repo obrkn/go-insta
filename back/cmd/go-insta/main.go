@@ -10,8 +10,21 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Data1 struct {
-	Title string `json:"title"`
+type User struct {
+	Id        int    `json:"id"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Token     string `json:"token"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+}
+
+type Post struct {
+	Id        int    `json:"id"`
+	UserId    int    `json:"user_id"`
+	Message   string `json:"message"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 func main() {
@@ -21,12 +34,13 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open("mysql", "root@tcp(db)/go_insta")
+	db, err := sql.Open("mysql", "root@tcp(db)/twitter")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
-	err = db.Ping()
+	rows, err := db.Query("SELECT id, email FROM users;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +50,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 
-	data1 := Data1{"hello, world"}
+	var u User
+	for rows.Next() {
+		err = rows.Scan(&u.Id, &u.Email)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("ID: %v, Email: %s\n", u.Id, u.Email)
+	}
+
+	data1 := "hello, world"
 	outputJson, err := json.Marshal(&data1)
 	if err != nil {
 		log.Fatal(err)
