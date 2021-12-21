@@ -1,4 +1,4 @@
-module github.com/obrkn/go-insta
+module github.com/obrkn/twitter
 
 go 1.16
 

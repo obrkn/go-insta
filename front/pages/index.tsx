@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   return (
     <Container maxWidth="sm">
       <Head>
-        <title>go-insta</title>
+        <title>tiwitter</title>
         <meta name="description" content="Goを使ったインスタ風アプリです。" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
