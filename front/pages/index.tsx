@@ -11,7 +11,7 @@ const Home: NextPage = () => {
     () => {
       axios
         .get("http://localhost:8080")
-        .then(res => setData(res.data.title))
+        .then(res => setData(res.data))
         // .get("back:8080", { 
         //   headers: {'withCredentials': 'true'}
         // })
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   return (
     <Container maxWidth="sm">
       <Head>
-        <title>go-insta</title>
+        <title>tiwitter</title>
         <meta name="description" content="Goを使ったインスタ風アプリです。" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

@@ -1,5 +1,5 @@
 {
-  "name": "go-insta",
+  "name": "twitter",
   "private": true,
   "scripts": {
     "dev": "next dev",
