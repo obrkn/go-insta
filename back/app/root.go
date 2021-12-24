@@ -9,6 +9,7 @@ import (
 
 func Root() {
 	http.HandleFunc("/", Home)
+	http.HandleFunc("/singup", SignUp)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
