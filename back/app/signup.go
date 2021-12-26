@@ -9,14 +9,22 @@ import (
 )
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		// if r.Method == "POST" {
-		hash, err := bcrypt.GenerateFromPassword([]byte("パスワード"), bcrypt.DefaultCost)
+	if r.Method == "POST" {
+		db := DbConnect()
+		defer db.Close()
+
+		email := r.PostFormValue("email")
+		password := r.PostFormValue("password")
+		hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Byteで返されるので文字列に変換して表示
-		fmt.Println(string(hash))
+		result, err := db.Exec("INSERT INTO users(email, password) VALUES(?, ?);", email, hashed_password)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(result)
 	}
 }
