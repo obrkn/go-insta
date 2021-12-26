@@ -1,44 +1,105 @@
+import * as React from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
-// import Image from 'next/image';
-import { Container, Box, Button } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { useState, useCallback } from 'react';
+import '../components/setting.js';
+
+const theme = createTheme();
 
 const SignUp: NextPage = () => {
-  const [data, setData] = useState("まだ何もデータ来てないよう")
-  const getData = useCallback(
-    () => {
-      axios
-        .get("http://localhost:8080")
-        .then(res => setData(res.data))
-        // .get("back:8080", { 
-        //   headers: {'withCredentials': 'true'}
-        // })
-        // .then(res => setData(res.data))
-    },
-    [],
-  )
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    axios
+      .post('http://localhost:8080/signup', {
+        email: data.get('email'),
+        password: data.get('password'),
+      })
+      .then(res => console.log(`成功：${res}`))
+      .catch(err => console.log(`失敗：${err}`))
+  };
+
   return (
-    <Container maxWidth="sm">
-      <Head>
-        <title>tiwitter</title>
-        <meta name="description" content="Goを使ったインスタ風アプリです。" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <Box sx={{ m: 2 }}>
-          {data}
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            アイコン
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
-        <Button onClick={() => getData()}>押して！</Button>
-      </main>
-
-      <footer>
-      　あああああ
-      </footer>
-    </Container>
-  )
+      </Container>
+    </ThemeProvider>
+  );
 }
 
 export default SignUp
