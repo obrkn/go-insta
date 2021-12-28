@@ -19,5 +19,9 @@ func DbConnect() *sql.DB {
 
 func SetHeader(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONT_HOST"))
+
+	// For preflight
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	return w
 }

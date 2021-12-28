@@ -22,12 +22,9 @@ const theme = createTheme();
 const SignUp: NextPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const params = new URLSearchParams(new FormData(event.currentTarget) as any);
     axios
-      .post('http://localhost:8080/signup', {
-        email: data.get('email'),
-        password: data.get('password'),
-      })
+      .post('http://localhost:8080/signup', params)
       .then(res => console.log(`成功：${res}`))
       .catch(err => console.log(`失敗：${err}`))
   };

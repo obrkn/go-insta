@@ -9,19 +9,15 @@ import (
 )
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	// w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	SetHeader(w)
 	if r.Method == "POST" {
 		db := DbConnect()
 		defer db.Close()
 
-		email := r.PostFormValue("email")
-		password := r.PostFormValue("password")
+		// e := r.ParseForm()
+		email := r.FormValue("email")
+		password := r.FormValue("password")
+		fmt.Println(email, password)
 		hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatal(err)
