@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   const getData = useCallback(
     () => {
       axios
-        .get("http://localhost:8080")
+        .post("http://localhost:8080")
         .then(res => setData(res.data))
         // .get("back:8080", { 
         //   headers: {'withCredentials': 'true'}
