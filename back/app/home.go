@@ -7,7 +7,12 @@ import (
 	"net/http"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, "404 Not Found")
+		return
+	}
 	db := DbConnect()
 	defer db.Close()
 
@@ -33,4 +38,14 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	fmt.Fprint(w, string(outputJson))
+
+	// 1
+	cookie, err := r.Cookie("hoge")
+
+	if err != nil {
+		log.Fatal("Cookie: ", err)
+	}
+	// 2
+	v := cookie.Value
+	fmt.Println(v)
 }

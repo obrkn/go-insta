@@ -8,8 +8,10 @@ import (
 )
 
 func Root() {
-	http.HandleFunc("/", Home)
-	http.HandleFunc("/signup", SignUp)
+	http.HandleFunc("/", HomeHandler)
+	http.HandleFunc("/signup", SignUpHandler)
+	http.HandleFunc("/token", TokenHandler)
+	http.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, r *http.Request) {})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
