@@ -16,8 +16,7 @@ services:
     build:
       context: ./back
     environment:
-      - FRONT_HOST=http://localhost:3000
-      - DB_HOST=db
+      - GO_ENV=development
     volumes:
       - ./back:/back
     command: sh -c "air"
