@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/csrf"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 
@@ -13,9 +15,8 @@ import (
 )
 
 var (
-	// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
-	key   = []byte("super-secret-key")
-	store = sessions.NewCookieStore(key)
+	verifyKey = []byte(os.Getenv("SESSION_KEY"))
+	store     = sessions.NewCookieStore(verifyKey)
 )
 
 func Root() {
@@ -24,13 +25,22 @@ func Root() {
 		log.Fatal("Error loading .env file")
 	}
 
-	Foo := os.Getenv("FOO")
-	fmt.Println(Foo)
-	http.HandleFunc("/", HomeHandler)
-	http.HandleFunc("/signup", SignUpHandler)
-	http.HandleFunc("/login", LoginHandler)
-	http.HandleFunc("/token", TokenHandler)
-	http.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, r *http.Request) {})
+	r := mux.NewRouter()
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	csrfMiddleware := csrf.Protect([]byte(verifyKey), csrf.Secure(false))
+	api := r.PathPrefix("/api").Subrouter()
+	api.Use(csrfMiddleware)
+
+	api.HandleFunc("/home", HomeHandler).Methods(http.MethodGet)
+	api.HandleFunc("/signup", SignUpHandler).Methods(http.MethodPost)
+	api.HandleFunc("/login", LoginHandler).Methods(http.MethodPost)
+	r.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, r *http.Request) {})
+
+	http.ListenAndServe(":8080", r)
+	// r.Use(mux.CORSMethodMiddleware(r))
+	// if os.Getenv("GO_ENV") == "development" {
+	// 	log.Fatal(http.ListenAndServe(":8080", csrf.Protect(verifyKey, csrf.Secure(false))(r)))
+	// } else {
+	// 	log.Fatal(http.ListenAndServe(":8080", csrf.Protect(verifyKey)(r)))
+	// }
 }
