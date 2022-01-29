@@ -6,6 +6,7 @@ import (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "http://localhost:3000")
 	fmt.Fprint(w, "heedafsdads")
 	// if r.URL.Path != "/" {
 	// 	w.WriteHeader(http.StatusNotFound)
@@ -15,7 +16,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// db := DbConnect()
 	// defer db.Close()
 	// w.Header().Set("X-CSRF-Token", csrf.Token(r))
-	// w = SetHeader(w)
 
 	// rows, err := db.Query("SELECT id, email FROM users;")
 	// if err != nil {
