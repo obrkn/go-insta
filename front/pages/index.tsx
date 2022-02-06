@@ -7,11 +7,14 @@ import { useState, useCallback } from 'react';
 
 const Home: NextPage = () => {
   const [data, setData] = useState("まだ何もデータ来てないよう")
+  const [text, setText] = useState("")
   const getData = useCallback(
     () => {
       axios
         .get("http://localhost:8080/api/home")
         .then(res => setData(res.data))
+        // .get("http://localhost:8080/api/home")
+        // .then(res => setData(res.data))
         // .get("back:8080", { 
         //   headers: {'withCredentials': 'true'}
         // })
@@ -19,6 +22,19 @@ const Home: NextPage = () => {
     },
     [],
   )
+  const postData = useCallback(async(event) => {
+    event.preventDefault();
+    const instance_d = axios.create({
+      withCredentials: true,
+    })
+    const resp = await instance_d.get("http://localhost:8080/api/token")
+    const token = resp.headers["x-csrf-token"]
+    const instance = axios.create({
+      withCredentials: true,
+      headers: {"X-CSRF-Token": token}
+    })
+    instance.post("http://localhost:8080/api/post", {text})
+  }, [text])
   return (
     <Container maxWidth="sm">
       <Head>
@@ -32,6 +48,13 @@ const Home: NextPage = () => {
           {data}
         </Box>
         <Button onClick={() => getData()}>押して！</Button>
+        <form onSubmit={postData}>
+          <label>
+            Name:
+            <input type="text" value={text} onChange={e => setText(e.target.value)} />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
       </main>
 
       <footer>

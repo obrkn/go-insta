@@ -1,13 +1,15 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "http://localhost:3000")
-	fmt.Fprint(w, "heedafsdads")
+	w.Header().Set("X-CSRF-Token", csrf.Token(r))
+	w.Write([]byte("sdfajsdflasdfj"))
 	// if r.URL.Path != "/" {
 	// 	w.WriteHeader(http.StatusNotFound)
 	// 	fmt.Fprint(w, "404 Not Found")
