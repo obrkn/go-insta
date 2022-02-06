@@ -33,7 +33,7 @@ func Root() {
 		csrf.Secure(false),
 		csrf.TrustedOrigins([]string{"*localhost*"}),
 	)
-	api := r.PathPrefix("/api").Subrouter()
+	api := r.PathPrefix("/api/v1").Subrouter()
 	api.Use(csrfMiddleware)
 
 	api.HandleFunc("/token", token).Methods(http.MethodGet)
@@ -43,17 +43,9 @@ func Root() {
 	api.HandleFunc("/post", post).Methods(http.MethodOptions)
 	api.HandleFunc("/signup", SignUpHandler).Methods(http.MethodPost)
 	api.HandleFunc("/login", LoginHandler).Methods(http.MethodPost)
-	// r.HandleFunc("/api/token", token).Methods(http.MethodGet)
-	// r.HandleFunc("/api/post", post)
 	r.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, r *http.Request) {})
 
 	http.ListenAndServe(":8080", r)
-	// r.Use(mux.CORSMethodMiddleware(r))
-	// if os.Getenv("GO_ENV") == "development" {
-	// 	log.Fatal(http.ListenAndServe(":8080", csrf.Protect(verifyKey, csrf.Secure(false))(r)))
-	// } else {
-	// 	log.Fatal(http.ListenAndServe(":8080", csrf.Protect(verifyKey)(r)))
-	// }
 }
 
 func token(w http.ResponseWriter, r *http.Request) {
