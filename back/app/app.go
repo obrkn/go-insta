@@ -7,6 +7,8 @@ import (
 	"github.com/obrkn/twitter/repositories"
 	"github.com/obrkn/twitter/router"
 	"github.com/obrkn/twitter/services"
+	"github.com/obrkn/twitter/utils/logic"
+	"github.com/obrkn/twitter/utils/validation"
 )
 
 func App() {
@@ -17,10 +19,16 @@ func App() {
 	db := db.Init()
 	defer db.Close()
 
+	// logic層
+	responseLogic := logic.NewResponseLogic()
+
+	// validation層
+	authValidate := validation.NewAuthValidation()
+
 	// repository層
 	userRepo := repositories.NewUserRepository(db)
 	// service層
-	authService := services.NewAuthService(userRepo)
+	authService := services.NewAuthService(userRepo, responseLogic, authValidate)
 	// controller層
 	authController := controllers.NewAuthController(authService)
 

@@ -39,13 +39,12 @@ func (ac *authController) SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	w.Write([]byte("byebyebye"))
 }
 
 /*
- サインイン
+	ログイン
 */
 func (ac *authController) SignIn(w http.ResponseWriter, r *http.Request) {
+	// ログイン
 
 }

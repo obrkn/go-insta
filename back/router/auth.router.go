@@ -22,4 +22,5 @@ func NewAuthRouter(ac controllers.AuthController) AuthRouter {
 func (ar *authRouter) SetAuthRouting(api *mux.Router) {
 	api.HandleFunc("/token", ar.ac.Token).Methods(http.MethodGet)
 	api.HandleFunc("/signup", ar.ac.SignUp).Methods(http.MethodPost)
+	api.HandleFunc("/signin", ar.ac.SignIn).Methods(http.MethodPost)
 }
