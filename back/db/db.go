@@ -8,7 +8,7 @@ import (
 )
 
 func Init() *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("root@tcp(%s)/twitter", os.Getenv("DB_HOST")))
+	db, err := sql.Open("mysql", fmt.Sprintf("root@tcp(%s)/twitter?charset=utf8mb4&parseTime=True&loc=Local", os.Getenv("DB_HOST")))
 	if err != nil {
 		log.Fatal(err)
 	}

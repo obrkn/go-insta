@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/csrf"
@@ -37,8 +37,12 @@ func (ac *authController) SignUp(w http.ResponseWriter, r *http.Request) {
 	// サインアップ
 	err := ac.as.SignUp(w, r)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		w.Write([]byte("サインアップ失敗です"))
+		return
 	}
+
+	w.Write([]byte("サインアップ成功です"))
 }
 
 /*
@@ -46,5 +50,12 @@ func (ac *authController) SignUp(w http.ResponseWriter, r *http.Request) {
 */
 func (ac *authController) SignIn(w http.ResponseWriter, r *http.Request) {
 	// ログイン
+	err := ac.as.SignIn(w, r)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("ログイン失敗です"))
+		return
+	}
 
+	w.Write([]byte("ログイン成功です。"))
 }
