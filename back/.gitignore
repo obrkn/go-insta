@@ -2,4 +2,4 @@
 tmp/
 
 # environment
-envfiles/
+.env
