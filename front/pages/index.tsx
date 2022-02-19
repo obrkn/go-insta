@@ -1,39 +1,17 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link'
 // import Image from 'next/image';
 import { Container, Box, Button } from '@mui/material';
-import axios from 'axios';
+import { ApiWithToken, Api } from '../components/axios';
 import { useState, useCallback } from 'react';
 
 const Home: NextPage = () => {
   const [data, setData] = useState("まだ何もデータ来てないよう")
   const [text, setText] = useState("")
-  const getData = useCallback(
-    () => {
-      axios
-        .get("http://localhost:8080/api/home")
-        .then(res => setData(res.data))
-        // .get("http://localhost:8080/api/home")
-        // .then(res => setData(res.data))
-        // .get("back:8080", { 
-        //   headers: {'withCredentials': 'true'}
-        // })
-        // .then(res => setData(res.data))
-    },
-    [],
-  )
   const postData = useCallback(async(event) => {
     event.preventDefault();
-    const instance_d = axios.create({
-      withCredentials: true,
-    })
-    const resp = await instance_d.get("http://localhost:8080/api/token")
-    const token = resp.headers["x-csrf-token"]
-    const instance = axios.create({
-      withCredentials: true,
-      headers: {"X-CSRF-Token": token}
-    })
-    instance.post("http://localhost:8080/api/post", {text})
+    ApiWithToken.post("/post", {text}).then(res => console.log(res.data))
   }, [text])
   return (
     <Container maxWidth="sm">
@@ -47,7 +25,7 @@ const Home: NextPage = () => {
         <Box sx={{ m: 2 }}>
           {data}
         </Box>
-        <Button onClick={() => getData()}>押して！</Button>
+        <Button onClick={() => console.log(process.env.NEXT_PUBLIC_API_BASE_URL)}>押して！</Button>
         <form onSubmit={postData}>
           <label>
             Name:
@@ -57,6 +35,9 @@ const Home: NextPage = () => {
         </form>
       </main>
 
+      <Link href={'/signup'}>
+      サインアップ
+      </Link>
       <footer>
       　あああああ
       </footer>

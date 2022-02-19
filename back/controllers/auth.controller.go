@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/csrf"
 	"github.com/obrkn/twitter/services"
 )
 
@@ -26,8 +25,8 @@ func NewAuthController(as services.AuthService) AuthController {
  CSRFトークン発行
 */
 func (ac *authController) Token(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("X-CSRF-Token", csrf.Token(r))
-	w.Write([]byte("Success - Token created"))
+	// トークン発行
+	ac.as.Token(w, r)
 }
 
 /*

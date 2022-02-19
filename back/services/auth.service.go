@@ -3,6 +3,7 @@ package services
 import (
 	"net/http"
 
+	"github.com/gorilla/csrf"
 	"github.com/obrkn/twitter/models"
 	"github.com/obrkn/twitter/repositories"
 	"github.com/obrkn/twitter/utils/logic"
@@ -12,6 +13,7 @@ import (
 )
 
 type AuthService interface {
+	Token(w http.ResponseWriter, r *http.Request) error
 	SignUp(w http.ResponseWriter, r *http.Request) error
 	SignIn(w http.ResponseWriter, r *http.Request) error
 }
@@ -24,6 +26,15 @@ type authService struct {
 
 func NewAuthService(ur repositories.UserRepository, rl logic.ResponseLogic, av validation.AuthValidation) AuthService {
 	return &authService{ur, rl, av}
+}
+
+/*
+	トークン発行
+*/
+func (as *authService) Token(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("X-CSRF-Token", csrf.Token(r))
+	as.rl.SendResponse(w, []byte("Success - Token created"), http.StatusOK)
+	return nil
 }
 
 /*
