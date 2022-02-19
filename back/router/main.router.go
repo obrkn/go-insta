@@ -38,6 +38,14 @@ func (mainRouter *mainRouter) setupRouting() *mux.Router {
 	api.Use(csrfMiddleware)
 
 	mainRouter.authR.SetAuthRouting(api)
+	api.HandleFunc("/post", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Write([]byte("obaobabarara"))
+		rw.Header().Add("Access-Control-Allow-Origin", "http://localhost:3000")
+		rw.Header().Add("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token")
+		rw.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS")
+		rw.Header().Add("Access-Control-Expose-Headers", "X-CSRF-Token")
+		rw.Header().Add("Access-Control-Allow-Credentials", "true")
+	}).Methods(http.MethodPost, http.MethodOptions)
 
 	return router
 }

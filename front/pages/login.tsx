@@ -6,6 +6,7 @@ import {
   CssBaseline,
   TextField,
   Link,
+  Grid,
   Box,
   Typography,
   Container,
@@ -16,7 +17,7 @@ import '../components/axios.ts';
 
 const theme = createTheme();
 
-const SignUp: NextPage = () => {
+const Login: NextPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams(new FormData(event.currentTarget) as any);
@@ -69,11 +70,11 @@ const SignUp: NextPage = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              サインアップ
+              ログイン
             </Button>
-            <Box sx={{justifyContent: 'center'}}>
-              <Link href="/login">
-                既にアカウントをお持ちの方はこちら
+            <Box sx={{justifyContent: 'flex-end'}}>
+              <Link href="/signup">
+                まだアカウントをお持ちでない方はこちら
               </Link>
             </Box>
           </Box>
@@ -83,4 +84,4 @@ const SignUp: NextPage = () => {
   );
 }
 
-export default SignUp
+export default Login
