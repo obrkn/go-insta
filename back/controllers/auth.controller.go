@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/obrkn/twitter/services"
@@ -25,6 +24,12 @@ func NewAuthController(as services.AuthService) AuthController {
  CSRFトークン発行
 */
 func (ac *authController) Token(w http.ResponseWriter, r *http.Request) {
+	// プリフライト
+	if r.Method == http.MethodOptions {
+		ac.as.Preflight(w, r)
+		return
+	}
+
 	// トークン発行
 	ac.as.Token(w, r)
 }
@@ -33,28 +38,38 @@ func (ac *authController) Token(w http.ResponseWriter, r *http.Request) {
  サインアップ
 */
 func (ac *authController) SignUp(w http.ResponseWriter, r *http.Request) {
-	// サインアップ
-	err := ac.as.SignUp(w, r)
-	if err != nil {
-		fmt.Println(err)
-		w.Write([]byte("サインアップ失敗です"))
+	// プリフライト
+	if r.Method == http.MethodOptions {
+		ac.as.Preflight(w, r)
 		return
 	}
 
-	w.Write([]byte("サインアップ成功です"))
+	// サインアップ
+	user, err := ac.as.SignUp(w, r)
+	if err != nil {
+		return
+	}
+
+	// レスポンス送信
+	ac.as.SendAuthResponse(w, r, &user, http.StatusOK)
 }
 
 /*
 	ログイン
 */
 func (ac *authController) SignIn(w http.ResponseWriter, r *http.Request) {
-	// ログイン
-	err := ac.as.SignIn(w, r)
-	if err != nil {
-		fmt.Println(err)
-		w.Write([]byte("ログイン失敗です"))
+	// プリフライト
+	if r.Method == http.MethodOptions {
+		ac.as.Preflight(w, r)
 		return
 	}
 
-	w.Write([]byte("ログイン成功です。"))
+	// ログイン
+	user, err := ac.as.SignIn(w, r)
+	if err != nil {
+		return
+	}
+
+	// レスポンス送信
+	ac.as.SendAuthResponse(w, r, &user, http.StatusOK)
 }

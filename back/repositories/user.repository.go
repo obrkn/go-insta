@@ -10,6 +10,7 @@ type UserRepository interface {
 	GetUserByEmail(user *models.User, email string) error
 	ExistsUserByEmail(email string) (bool, error)
 	CreateUser(createUser *models.User) error
+	UpdateUser(updateUser *models.User) error
 }
 
 type userRepository struct {
@@ -52,6 +53,18 @@ func (ur *userRepository) ExistsUserByEmail(email string) (bool, error) {
 */
 func (ur *userRepository) CreateUser(createUser *models.User) error {
 	_, err := ur.db.Exec("INSERT INTO users(email, password) VALUES(?, ?);", createUser.Email, createUser.Password)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+/*
+	ユーザーデータ更新
+*/
+func (ur *userRepository) UpdateUser(updateUser *models.User) error {
+	_, err := ur.db.Exec("UPDATE users SET email=?, password=?, failed_attempts=?, locked_at=? WHERE id=?", updateUser.Email, updateUser.Password, updateUser.FailedAttempts, updateUser.LockedAt, updateUser.Id)
 	if err != nil {
 		return err
 	}

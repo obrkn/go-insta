@@ -11,7 +11,7 @@ import {
   Container,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import { ApiWithToken, Api } from '../components/axios';
 import '../components/axios.ts';
 
 const theme = createTheme();
@@ -20,8 +20,7 @@ const SignUp: NextPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams(new FormData(event.currentTarget) as any);
-    axios
-      .post('http://localhost:8080/signup', params)
+    ApiWithToken.post('/signup', params)
       .then(res => console.log(`成功：${res}`))
       .catch(err => console.log(`失敗：${err}`))
   };
