@@ -24,10 +24,9 @@ func NewAuthValidation() AuthValidation {
 func (av *authValidation) SignInValidate(signInRequest models.SignInRequest) error {
 	return validation.ValidateStruct(&signInRequest,
 		validation.Field(
-			&signInRequest.Email,
-			validation.Required.Error("メールアドレス入力は必須です。"),
-			validation.RuneLength(5, 40).Error("メールアドレスは 5〜40 文字です。"),
-			is.Email.Error("メールアドレスの形式が間違っています。"),
+			&signInRequest.Nickname,
+			validation.Required.Error("ニックネーム入力は必須です。"),
+			validation.RuneLength(3, 20).Error("ニックネームは 3〜20 文字です。"),
 		),
 		validation.Field(
 			&signInRequest.Password,
@@ -44,10 +43,9 @@ func (av *authValidation) SignInValidate(signInRequest models.SignInRequest) err
 func (av *authValidation) SignUpValidate(signUpRequest models.SignUpRequest) error {
 	return validation.ValidateStruct(&signUpRequest,
 		validation.Field(
-			&signUpRequest.Email,
-			validation.Required.Error("メールアドレス入力は必須です。"),
-			validation.RuneLength(5, 40).Error("メールアドレスは 5〜40 文字です。"),
-			is.Email.Error("メールアドレスの形式が間違っています。"),
+			&signUpRequest.Nickname,
+			validation.Required.Error("ニックネーム入力は必須です。"),
+			validation.RuneLength(3, 20).Error("ニックネームは 3〜20 文字です。"),
 		),
 		validation.Field(
 			&signUpRequest.Password,

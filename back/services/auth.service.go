@@ -52,7 +52,7 @@ func (as *authService) Token(w http.ResponseWriter, r *http.Request) error {
 func (as *authService) SignIn(w http.ResponseWriter, r *http.Request) (models.User, error) {
 	// RequestのBodyデータを取得
 	signInRequestParam := models.SignInRequest{
-		Email:    r.FormValue("email"),
+		Nickname: r.FormValue("nickname"),
 		Password: r.FormValue("password"),
 	}
 
@@ -65,8 +65,8 @@ func (as *authService) SignIn(w http.ResponseWriter, r *http.Request) (models.Us
 
 	// ユーザー認証
 	var user models.User
-	// emailに紐づくユーザーをチェック
-	if err := as.ur.GetUserByEmail(&user, r.FormValue("email")); err != nil {
+	// nicknameに紐づくユーザーをチェック
+	if err := as.ur.GetUserByNickname(&user, r.FormValue("nickname")); err != nil {
 		return models.User{}, err
 	}
 
@@ -104,7 +104,7 @@ func (as *authService) SignIn(w http.ResponseWriter, r *http.Request) (models.Us
 func (as *authService) SignUp(w http.ResponseWriter, r *http.Request) (models.User, error) {
 	// RequestのBodyデータを取得
 	signUpRequestParam := models.SignUpRequest{
-		Email:    r.FormValue("email"),
+		Nickname: r.FormValue("nickname"),
 		Password: r.FormValue("password"),
 	}
 
@@ -115,14 +115,14 @@ func (as *authService) SignUp(w http.ResponseWriter, r *http.Request) (models.Us
 		return models.User{}, err
 	}
 
-	// 同じメールアドレスのユーザーがいないか検証
-	// emailに紐づくユーザーをチェック
-	if isExists, err := as.ur.ExistsUserByEmail(signUpRequestParam.Email); err != nil {
+	// 同じニックネームのユーザーがいないか検証
+	// nicknameに紐づくユーザーをチェック
+	if isExists, err := as.ur.ExistsUserByNickname(signUpRequestParam.Nickname); err != nil {
 		as.rl.SendResponse(w, as.rl.CreateErrorStringResponse("DBエラー"), http.StatusInternalServerError)
 		return models.User{}, err
 	} else if isExists {
-		as.rl.SendResponse(w, as.rl.CreateErrorStringResponse("入力されたメールアドレスは既に登録されています。"), http.StatusUnauthorized)
-		return models.User{}, errors.Errorf("「%w」のユーザーは既に登録されています。", signUpRequestParam.Email)
+		as.rl.SendResponse(w, as.rl.CreateErrorStringResponse("入力されたニックネームは既に登録されています。"), http.StatusUnauthorized)
+		return models.User{}, errors.Errorf("「%w」のユーザーは既に登録されています。", signUpRequestParam.Nickname)
 	}
 
 	// レコード作成
@@ -131,7 +131,7 @@ func (as *authService) SignUp(w http.ResponseWriter, r *http.Request) (models.Us
 	if err != nil {
 		return models.User{}, err
 	}
-	createUser.Email = signUpRequestParam.Email
+	createUser.Nickname = signUpRequestParam.Nickname
 	createUser.Password = string(hashPassword)
 
 	err = as.ur.CreateUser(&createUser)
@@ -172,5 +172,5 @@ func (as *authService) SendAuthResponse(w http.ResponseWriter, r *http.Request, 
 		log.Fatal(err)
 	}
 
-	as.rl.SendResponse(w, []byte(user.Email), code)
+	as.rl.SendResponse(w, []byte(user.Nickname), code)
 }

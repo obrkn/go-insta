@@ -65,10 +65,10 @@ const SignUp: NextPage = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="nickname"
+              label="Nickname"
+              name="nickname"
+              autoComplete="nickname"
               autoFocus
             />
             <TextField

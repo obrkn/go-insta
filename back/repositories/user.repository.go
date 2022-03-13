@@ -7,8 +7,8 @@ import (
 )
 
 type UserRepository interface {
-	GetUserByEmail(user *models.User, email string) error
-	ExistsUserByEmail(email string) (bool, error)
+	GetUserByNickname(user *models.User, nickname string) error
+	ExistsUserByNickname(nickname string) (bool, error)
 	CreateUser(createUser *models.User) error
 	UpdateUser(updateUser *models.User) error
 }
@@ -22,12 +22,12 @@ func NewUserRepository(db *sql.DB) UserRepository {
 }
 
 /*
-	emailに紐づくユーザーを取得
+	nicknameに紐づくユーザーを取得
 */
-func (ur *userRepository) GetUserByEmail(user *models.User, email string) error {
+func (ur *userRepository) GetUserByNickname(user *models.User, nickname string) error {
 	if err := ur.db.
-		QueryRow("SELECT id, email, password, failed_attempts, locked_at, created_at, updated_at FROM users WHERE email = ?", email).
-		Scan(&user.Id, &user.Email, &user.Password, &user.FailedAttempts, &user.LockedAt, &user.CreatedAt, &user.UpdatedAt); err != nil {
+		QueryRow("SELECT id, nickname, password, failed_attempts, locked_at, created_at, updated_at FROM users WHERE nickname = ?", nickname).
+		Scan(&user.Id, &user.Nickname, &user.Password, &user.FailedAttempts, &user.LockedAt, &user.CreatedAt, &user.UpdatedAt); err != nil {
 		return err
 	}
 
@@ -35,12 +35,12 @@ func (ur *userRepository) GetUserByEmail(user *models.User, email string) error 
 }
 
 /*
-	emailに紐づくユーザーが存在判定
+	nicknameに紐づくユーザーが存在判定
 */
-func (ur *userRepository) ExistsUserByEmail(email string) (bool, error) {
+func (ur *userRepository) ExistsUserByNickname(nickname string) (bool, error) {
 	var isExists bool
 	if err := ur.db.
-		QueryRow("SELECT EXISTS ( SELECT 1 FROM users WHERE email = ? LIMIT 1)", email).
+		QueryRow("SELECT EXISTS ( SELECT 1 FROM users WHERE nickname = ? LIMIT 1)", nickname).
 		Scan(&isExists); err != nil {
 		return isExists, err
 	}
@@ -52,7 +52,7 @@ func (ur *userRepository) ExistsUserByEmail(email string) (bool, error) {
 	ユーザーデータ新規登録
 */
 func (ur *userRepository) CreateUser(createUser *models.User) error {
-	_, err := ur.db.Exec("INSERT INTO users(email, password) VALUES(?, ?);", createUser.Email, createUser.Password)
+	_, err := ur.db.Exec("INSERT INTO users(nickname, password) VALUES(?, ?);", createUser.Nickname, createUser.Password)
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (ur *userRepository) CreateUser(createUser *models.User) error {
 	ユーザーデータ更新
 */
 func (ur *userRepository) UpdateUser(updateUser *models.User) error {
-	_, err := ur.db.Exec("UPDATE users SET email=?, password=?, failed_attempts=?, locked_at=? WHERE id=?", updateUser.Email, updateUser.Password, updateUser.FailedAttempts, updateUser.LockedAt, updateUser.Id)
+	_, err := ur.db.Exec("UPDATE users SET nickname=?, password=?, failed_attempts=?, locked_at=? WHERE id=?", updateUser.Nickname, updateUser.Password, updateUser.FailedAttempts, updateUser.LockedAt, updateUser.Id)
 	if err != nil {
 		return err
 	}

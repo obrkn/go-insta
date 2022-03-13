@@ -1,6 +1,6 @@
 USE twitter;
 
-INSERT INTO users (email, password)
+INSERT INTO users (nickname, password)
 VALUES ('user1@example.com', 'password'),
        ('user2@example.com', 'password'),
        ('user3@example.com', 'password'),
@@ -14,7 +14,7 @@ VALUES ('user1@example.com', 'password'),
        ('user11@example.com', 'password'),
        ('user12@example.com', 'password');
 
-INSERT INTO posts (user_id, message)
+INSERT INTO tweets (user_id, message)
 VALUES (1, 'hello, world!'),
        (1, 'hello, world!'),
        (1, 'hello, world!'),

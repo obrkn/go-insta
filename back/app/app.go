@@ -24,17 +24,22 @@ func App() {
 
 	// validation層
 	authValidate := validation.NewAuthValidation()
+	tweetValidate := validation.NewTweetValidation()
 
 	// repository層
 	userRepo := repositories.NewUserRepository(db)
+	tweetRepo := repositories.NewTweetRepository(db)
 	// service層
 	authService := services.NewAuthService(userRepo, responseLogic, authValidate)
+	tweetService := services.NewTweetService(tweetRepo, responseLogic, tweetValidate)
 	// controller層
 	authController := controllers.NewAuthController(authService)
+	tweetController := controllers.NewTweetController(tweetService, authService)
 
 	// router設定
 	authRouter := router.NewAuthRouter(authController)
-	mainRouter := router.NewMainRouter(authRouter)
+	tweetRouter := router.NewTweetRouter(tweetController)
+	mainRouter := router.NewMainRouter(authRouter, tweetRouter)
 
 	// 起動
 	mainRouter.StartWebServer()

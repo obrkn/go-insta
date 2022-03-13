@@ -4,7 +4,7 @@ package models
  サインアップ
 */
 type SignUpRequest struct {
-	Email    string `json:"email"`
+	Nickname string `json:"nickname"`
 	Password string `json:"password"`
 }
 
@@ -12,6 +12,6 @@ type SignUpRequest struct {
  サインイン
 */
 type SignInRequest struct {
-	Email    string `json:"email"`
+	Nickname string `json:"nickname"`
 	Password string `json:"password"`
 }
