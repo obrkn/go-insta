@@ -26,8 +26,8 @@ func NewUserRepository(db *sql.DB) UserRepository {
 */
 func (ur *userRepository) GetUserByEmail(user *models.User, email string) error {
 	if err := ur.db.
-		QueryRow("SELECT id, email, password, created_at, updated_at FROM users WHERE email = ?", email).
-		Scan(&user.Id, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt); err != nil {
+		QueryRow("SELECT id, email, password, failed_attempts, locked_at, created_at, updated_at FROM users WHERE email = ?", email).
+		Scan(&user.Id, &user.Email, &user.Password, &user.FailedAttempts, &user.LockedAt, &user.CreatedAt, &user.UpdatedAt); err != nil {
 		return err
 	}
 

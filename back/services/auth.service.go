@@ -70,11 +70,12 @@ func (as *authService) SignIn(w http.ResponseWriter, r *http.Request) (models.Us
 		return models.User{}, err
 	}
 
+	fmt.Println(user.LockedAt, time.Now())
 	// アカウントロック
-	if user.LockedAt.Add(30 * time.Minute).After(time.Now()) {
+	if user.LockedAt != nil && user.LockedAt.Add(30*time.Minute).After(time.Now()) {
 		errMessage := "アカウントがロックされています。"
 		as.rl.SendResponse(w, as.rl.CreateErrorStringResponse(errMessage), http.StatusUnauthorized)
-		return models.User{}, fmt.Errorf("Error: %s", "Forbidden - Locked account")
+		return models.User{}, fmt.Errorf("error: %s", "forbidden - locked account")
 	}
 
 	// パスワード照合

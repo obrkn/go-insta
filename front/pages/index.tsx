@@ -1,3 +1,4 @@
+import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link'
@@ -5,6 +6,18 @@ import Link from 'next/link'
 import { Container, Box, Button } from '@mui/material';
 import { ApiWithToken, Api } from '../components/axios';
 import { useState, useCallback } from 'react';
+import Context from '../lib/store/context'
+
+const themes = {
+  light: {
+    foreground: "#000000",
+    background: "#eeeeee"
+  },
+  dark: {
+    foreground: "#ffffff",
+    background: "#222222"
+  }
+};
 
 const Home: NextPage = () => {
   const [data, setData] = useState("まだ何もデータ来てないよう")
@@ -13,7 +26,10 @@ const Home: NextPage = () => {
     event.preventDefault();
     ApiWithToken.post("/post", {text}).then(res => console.log(res.data))
   }, [text])
+      const { state, dispatch } = React.useContext(Context)
+      console.log(state)
   return (
+    
     <Container maxWidth="sm">
       <Head>
         <title>tiwitter</title>
@@ -21,6 +37,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+
+ <button onClick={() => dispatch({ type: 'SIGNIN' })}>+</button>
+ <p>{state.signedIn}</p>
       <main>
         <Box sx={{ m: 2 }}>
           {data}

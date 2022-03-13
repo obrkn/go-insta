@@ -14,15 +14,15 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import '../components/axios.ts';
+import { ApiWithToken, Api } from '../components/axios';
 
 const theme = createTheme();
 
-const Login: NextPage = () => {
+const SignIn: NextPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams(new FormData(event.currentTarget) as any);
-    axios
-      .post('http://localhost:8080/signup', params)
+    ApiWithToken.post('/signin', params)
       .then(res => console.log(`成功：${res}`))
       .catch(err => console.log(`失敗：${err}`))
   };
@@ -84,4 +84,4 @@ const Login: NextPage = () => {
   );
 }
 
-export default Login
+export default SignIn

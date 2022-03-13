@@ -71,7 +71,7 @@ const SignUp: NextPage = () => {
               サインアップ
             </Button>
             <Box sx={{justifyContent: 'center'}}>
-              <Link href="/login">
+              <Link href="/signin">
                 既にアカウントをお持ちの方はこちら
               </Link>
             </Box>
