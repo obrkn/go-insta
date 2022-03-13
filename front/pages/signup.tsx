@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { NextPage } from 'next';
+import Router from 'next/router';
 import {
   Avatar,
   Button,
@@ -9,6 +10,8 @@ import {
   Box,
   Typography,
   Container,
+  Alert,
+  Modal,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ApiWithToken, Api } from '../components/axios';
@@ -16,16 +19,32 @@ import '../components/axios.ts';
 
 const theme = createTheme();
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 2,
+};
+
 const SignUp: NextPage = () => {
+  const [error, setError] = React.useState('');
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams(new FormData(event.currentTarget) as any);
     ApiWithToken.post('/signup', params)
-      .then(res => console.log(`成功：${res}`))
-      .catch(err => console.log(`失敗：${err}`))
+      .then(res => setModalVisible(true))
+      .catch(err => setError(err.response?.data || '新規登録に失敗しました。'))
   };
 
   return (
+  <>
+    {error && <Alert severity="error">{error}</Alert>}
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -79,6 +98,20 @@ const SignUp: NextPage = () => {
         </Box>
       </Container>
     </ThemeProvider>
+    <Modal
+      open={modalVisible}
+      onClose={() => setModalVisible(false)}
+    >
+      <Box sx={style}>
+        <Typography sx={{textAlign: 'center'}}>
+          サインアップが完了しました。
+        </Typography>
+        <Button href='/signin' variant="contained" sx={{mt: 2, width: '100%'}}>
+          OK
+        </Button>
+      </Box>
+    </Modal>
+  </>
   );
 }
 

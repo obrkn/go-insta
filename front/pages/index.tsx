@@ -27,7 +27,6 @@ const Home: NextPage = () => {
     ApiWithToken.post("/post", {text}).then(res => console.log(res.data))
   }, [text])
       const { state, dispatch } = React.useContext(Context)
-      console.log(state)
   return (
     
     <Container maxWidth="sm">
@@ -39,7 +38,7 @@ const Home: NextPage = () => {
 
 
  <button onClick={() => dispatch({ type: 'SIGNIN' })}>+</button>
- <p>{state.signedIn}</p>
+ <p>{state.signedIn.toString()}</p>
       <main>
         <Box sx={{ m: 2 }}>
           {data}

@@ -6,28 +6,44 @@ import {
   CssBaseline,
   TextField,
   Link,
-  Grid,
   Box,
   Typography,
   Container,
+  Alert,
+  Modal,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
 import '../components/axios.ts';
 import { ApiWithToken, Api } from '../components/axios';
 
 const theme = createTheme();
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 2,
+};
+
 const SignIn: NextPage = () => {
+  const [error, setError] = React.useState('');
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams(new FormData(event.currentTarget) as any);
     ApiWithToken.post('/signin', params)
-      .then(res => console.log(`成功：${res}`))
-      .catch(err => console.log(`失敗：${err}`))
+      .then(res => setModalVisible(true))
+      .catch(err => setError(err.response?.data || 'ログインに失敗しました。'))
   };
 
   return (
+  <>
+    {error && <Alert severity="error">{error}</Alert>}
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -81,6 +97,20 @@ const SignIn: NextPage = () => {
         </Box>
       </Container>
     </ThemeProvider>
+    <Modal
+      open={modalVisible}
+      onClose={() => setModalVisible(false)}
+    >
+      <Box sx={style}>
+        <Typography sx={{textAlign: 'center'}}>
+          ログインが完了しました。
+        </Typography>
+        <Button href='/' variant="contained" sx={{mt: 2, width: '100%'}}>
+          OK
+        </Button>
+      </Box>
+    </Modal>
+  </>
   );
 }
 

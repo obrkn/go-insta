@@ -46,10 +46,10 @@ func (rl *responseLogic) CreateErrorResponse(err error) []byte {
 	エラーレスポンス作成（エラーメッセージはstring）
 */
 func (rl *responseLogic) CreateErrorStringResponse(errMessage string) []byte {
-	response := map[string]interface{}{
-		"error": errMessage,
-	}
-	responseBody, _ := json.Marshal(response)
+	// response := map[string]interface{}{
+	// 	"error": errMessage,
+	// }
+	responseBody, _ := json.Marshal(errMessage)
 
 	return responseBody
 }
